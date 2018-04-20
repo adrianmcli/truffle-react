@@ -35,7 +35,7 @@ This Truffle Box is still in early development, there is much work to be done. A
 
 2. Download the box. This also takes care of installing the necessary dependencies.
     ```javascript
-    truffle unbox adrianmcli/truffle-next
+    truffle unbox adrianmcli/truffle-react
     ```
 
 3. Run the development console.
