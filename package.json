@@ -1,0 +1,22 @@
+{
+  "name": "truffle-react",
+  "version": "1.0.0",
+  "description": "A boilerplate Truffle Box project with Create React App for rapid Ethereum Dapp development",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrianmcli/truffle-react.git"
+  },
+  "keywords": [],
+  "author": "Adrian Li",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adrianmcli/truffle-react/issues"
+  },
+  "homepage": "https://github.com/adrianmcli/truffle-react#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0"
+  }
+}
