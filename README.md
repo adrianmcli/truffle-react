@@ -12,7 +12,7 @@
 
 ---
 
-## A Minimal Smart Contract Development Boilerplate with Create-React-App
+## Smart Contract Development with Create-React-App
 
 How does this differ from the official React Truffle Box?
 
