@@ -20,19 +20,17 @@ class App extends Component {
       // Get the contract instance by passing in web3 and the contract definition.
       const contract = await getContractInstance(web3, contractDefinition)
 
-      // Set web3, accounts, and contract to the state so we can use it for our dapp.
-      this.setState({ web3, accounts, contract })
+      // Set web3, accounts, and contract to the state, and then proceed with an
+      // example of interacting with the contract's methods.
+      this.setState({ web3, accounts, contract }, this.runExample)
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(`Failed to load web3, accounts, or contract. Check console for details.`)
       console.log(error)
     }
-
-    // Proceed with an example of interacting with the contract's methods.
-    this.setValue()
   }
 
-  setValue = async () => {
+  runExample = async () => {
     const { accounts, contract } = this.state
 
     // Stores a given value, 5 by default.
