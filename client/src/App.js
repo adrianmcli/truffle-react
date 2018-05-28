@@ -1,98 +1,62 @@
 import React, { Component } from 'react'
-import SimpleStorageContract from './contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
+import getAccounts from './utils/getAccounts'
+import getContractInstance from './utils/getContractInstance'
+import contractDefinition from './contracts/SimpleStorage.json'
 
 import './App.css'
 
 class App extends Component {
-  constructor(props) {
-    super(props)
+  state = { storageValue: 0, web3: null, accounts: null, contract: null }
 
-    this.state = {
-      storageValue: 0,
-      web3: null
-    }
-  }
+  componentDidMount = async () => {
+    try {
+      // Get network provider and web3 instance.
+      const web3 = await getWeb3()
 
-  componentWillMount() {
-    // Get network provider and web3 instance.
-    // See utils/getWeb3 for more info.
+      // Use web3 to get the user's accounts.
+      const accounts = await getAccounts(web3)
 
-    getWeb3
-    .then(results => {
-      this.setState({
-        web3: results.web3
-      })
+      // Get the contract instance by passing in web3 and the contract definition.
+      const contract = await getContractInstance(web3, contractDefinition)
 
-      // Instantiate contract once web3 provided.
-      this.instantiateContract()
-    })
-    .catch(() => {
-      console.log('Error finding web3.')
-    })
-  }
-
-  instantiateContract() {
-    /*
-     * SMART CONTRACT EXAMPLE
-     *
-     * Normally these functions would be called in the context of a
-     * state management library, but for convenience I've placed them here.
-     */
-
-    const contract = require('truffle-contract')
-    const simpleStorage = contract(SimpleStorageContract)
-    simpleStorage.setProvider(this.state.web3.currentProvider)
-
-    // Dirty hack for web3@1.0.0 support for localhost testrpc
-    // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
-    if (typeof simpleStorage.currentProvider.sendAsync !== 'function') {
-      simpleStorage.currentProvider.sendAsync = function () {
-        return simpleStorage.currentProvider.send.apply(
-          simpleStorage.currentProvider, arguments
-        )
-      }
+      // Set web3, accounts, and contract to the state so we can use it for our dapp.
+      this.setState({ web3, accounts, contract })
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      alert(`Failed to load web3, accounts, or contract. Check console for details.`)
+      console.log(error)
     }
 
-    // Declaring this for later so we can chain functions on SimpleStorage.
-    var simpleStorageInstance
+    // Proceed with an example of interacting with the contract's methods.
+    this.setValue()
+  }
 
-    // Get accounts.
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      simpleStorage.deployed().then((instance) => {
-        simpleStorageInstance = instance
+  setValue = async () => {
+    const { accounts, contract } = this.state
 
-        // Stores a given value, 5 by default.
-        return simpleStorageInstance.set(5, {from: accounts[0]})
-      }).then((result) => {
-        // Get the value from the contract to prove it worked.
-        return simpleStorageInstance.get.call({from: accounts[0]})
-      }).then((result) => {
-        // Update state with the result.
-        return this.setState({ storageValue: result.c[0] })
-      })
-    })
+    // Stores a given value, 5 by default.
+    await contract.set(5, { from: accounts[0] })
+    
+    // Get the value from the contract to prove it worked.
+    const response = await contract.get.call({ from: accounts[0] })
+
+    // Update state with the result.
+    this.setState({ storageValue: response.toNumber() })
   }
 
   render() {
+    if (!this.state.web3) {
+      return <div>Loading Web3, accounts, and contract...</div>
+    }
     return (
       <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
-        </nav>
-
-        <main className="container">
-          <div className="pure-g">
-            <div className="pure-u-1-1">
-              <h1>Good to Go!</h1>
-              <p>Your Truffle Box is installed and ready.</p>
-              <h2>Smart Contract Example</h2>
-              <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
-              <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
-              <p>The stored value is: {this.state.storageValue}</p>
-            </div>
-          </div>
-        </main>
+        <h1>Good to Go!</h1>
+        <p>Your Truffle Box is installed and ready.</p>
+        <h2>Smart Contract Example</h2>
+        <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
+        <p>Try changing the value stored on <strong>line 39</strong> of App.js.</p>
+        <div>The stored value is: {this.state.storageValue}</div>
       </div>
     );
   }
