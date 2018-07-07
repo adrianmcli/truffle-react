@@ -19,6 +19,8 @@ How does this differ from the official React Truffle Box?
 - **No ejection** required;
 - **React frontend** is located in its own separate folder (i.e. `/client`);
 - **Babel** is included so you can use ES6 module import statements;
+- Uses **Web3 1.0 beta** with **PromiEvents**
+- Truffle-Contract is no longer a dependency
 
 If you have Truffle installed, run the following to get started (more detailed instructions below):
 
