@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import getWeb3 from './utils/getWeb3'
-import getAccounts from './utils/getAccounts'
 import getContractInstance from './utils/getContractInstance'
 import contractDefinition from './contracts/SimpleStorage.json'
 
@@ -15,7 +14,7 @@ class App extends Component {
       const web3 = await getWeb3()
 
       // Use web3 to get the user's accounts.
-      const accounts = await getAccounts(web3)
+      const accounts = await web3.eth.getAccounts()
 
       // Get the contract instance by passing in web3 and the contract definition.
       const contract = await getContractInstance(web3, contractDefinition)
@@ -34,13 +33,13 @@ class App extends Component {
     const { accounts, contract } = this.state
 
     // Stores a given value, 5 by default.
-    await contract.set(5, { from: accounts[0] })
+    await contract.methods.set(5).send({ from: accounts[0] })
     
     // Get the value from the contract to prove it worked.
-    const response = await contract.get.call({ from: accounts[0] })
+    const response = await contract.methods.get().call({ from: accounts[0] })
 
     // Update state with the result.
-    this.setState({ storageValue: response.toNumber() })
+    this.setState({ storageValue: response })
   }
 
   render() {
