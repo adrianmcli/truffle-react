@@ -1,3 +1,10 @@
+
+# DEPRECATION NOTICE
+
+Hi all, I've since joined the Truffle team. If you're looking for a good React boilerplate to start your development, head over to the official React box [here](https://github.com/truffle-box/react-box/) which I will be maintaining personally along with the rest of the team.
+
+---
+
 <h1 align="center">Truffle and React.js</h1> <br>
 <p align="center">
   <img alt="comet" src="https://user-images.githubusercontent.com/943555/35969146-a360d406-0d11-11e8-8224-2efdde6fb888.png" width="120">
